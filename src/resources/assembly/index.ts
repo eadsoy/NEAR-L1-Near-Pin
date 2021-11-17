@@ -59,7 +59,7 @@ export function addVote(voter: string, value: i8, resourceId: i32 ): void {
   const resource = resources[resourceId];
   logging.log("resource is: ")
   logging.log(resource)
-  // calculate the new score for the meme
+  // calculate the new score for the resource
   resource.vote_score = resource.vote_score + value
   // save it back to storage
   resources.replace(resourceId, resource);
