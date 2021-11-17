@@ -1,6 +1,6 @@
 import { storage, Context, logging } from "near-sdk-core"
-import { Resource, Vote, resources, Category, creators, votes, voters} from "./models"
-import { AccountId, PAGE_SIZE } from "../../utils"
+import { Resource, Vote, resources, creators, votes, voters} from "./models"
+import { AccountId, PAGE_SIZE, Category } from "../../utils"
 
 
 // NOTE: resources is stored in PersistentVector

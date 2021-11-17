@@ -92,3 +92,10 @@ export function assert_single_promise_success(): void {
 }
 export const RESOURCE_KEY = "state"
 export const PAGE_SIZE = 10
+// TODO: MOVE TO UTILS
+export enum Category {
+  "NEAR Docs",
+  "Smart Contracts",
+  "NEAR",
+  "Learn NEAR"
+}

@@ -1,4 +1,5 @@
-import { Resource, Category } from "../assembly/models";
+import { AccountId, PAGE_SIZE, Category } from "../../utils"
+import { Resource } from "../assembly/models";
 
 let contract: Resource
 let url: string;

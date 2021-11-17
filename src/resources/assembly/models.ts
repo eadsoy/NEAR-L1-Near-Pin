@@ -1,19 +1,5 @@
-import { RESOURCE_KEY, AccountId, Money, Timestamp } from "../../utils";
-
+import { RESOURCE_KEY, AccountId, Money, Timestamp, Category } from "../../utils";
 import { storage, Context, u128, PersistentSet, PersistentVector, PersistentMap } from "near-sdk-core"
-
-
-// TODO: MOVE TO UTILS
-export enum Category {
-  "NEAR Docs",
-  "Smart Contracts",
-  "NEAR",
-  "Learn NEAR"
-}
-
-
-// -------------------------------
-// -------------------------------
 @nearBindgen
 export class Vote {
   created_at: Timestamp = Context.blockTimestamp;
@@ -23,8 +9,6 @@ export class Vote {
     public voter: AccountId
   ) { }
 }
-
-
 @nearBindgen
 export class Resource {
   creator: AccountId = Context.sender;
