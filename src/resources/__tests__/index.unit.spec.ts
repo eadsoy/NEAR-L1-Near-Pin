@@ -1,9 +1,10 @@
-import { Resource, Category } from "../assembly/models";
+import { AccountId, PAGE_SIZE } from "../../utils"
+import { Resource } from "../assembly/models";
 
 let contract: Resource
 let url: string;
 let title: string;
-let category: Category;
+let category: string;
 
 beforeEach(() => {
   contract = new Resource(url, title, category)
