@@ -1,53 +1,87 @@
-import { storage, Context } from "near-sdk-core"
+import { storage, Context, logging } from "near-sdk-core"
+import { Resource, Vote, resources, Category, creators} from "./models"
+import { AccountId, PAGE_SIZE } from "../../utils"
 
-@nearBindgen
-export class Contract {
-  private message: string = 'hello world'
 
-  // return the string 'hello world'
-  helloWorld(): string {
-    return this.message
-  }
 
-  // read the given key from account (contract) storage
-  read(key: string): string {
-    if (isKeyInStorage(key)) {
-      return `✅ Key [ ${key} ] has value [ ${storage.getString(key)!} ]`
-    } else {
-      return `🚫 Key [ ${key} ] not found in storage. ( ${this.storageReport()} )`
-    }
-  }
 
-  // write the given value at the given key to account (contract) storage
-  @mutateState()
-  write(key: string, value: string): string {
-    storage.set(key, value)
-    return `✅ Data saved. ( ${this.storageReport()} )`
-  }
 
-  // private helper method used by read() and write() above
-  private storageReport(): string {
-    return `storage [ ${Context.storageUsage} bytes ]`
-  }
+// NOTE: resources is stored in PersistentVector
+export function addResource(accountId: AccountId, title: string, url: string, category: Category): void {
+  // url has to have identifier from valid content provider
+  assert(is_valid_url(url), "URL is not valid, must start with valid https://")
+
+  // save the resource to storage
+  const resource = new Resource(title, url, category)
+
+  resources.push(resource)
+  creators.add(accountId)
 }
 
-/**
- * This function exists only to avoid a compiler error
- *
-
-ERROR TS2339: Property 'contains' does not exist on type 'src/singleton/assembly/index/Contract'.
-
-     return this.contains(key);
-                 ~~~~~~~~
- in ~lib/near-sdk-core/storage.ts(119,17)
-
-/Users/sherif/Documents/code/near/_projects/edu.t3/starter--near-sdk-as/node_modules/asbuild/dist/main.js:6
-        throw err;
-        ^
-
- * @param key string key in account storage
- * @returns boolean indicating whether key exists
- */
-function isKeyInStorage(key: string): bool {
-  return storage.hasKey(key)
+export function getResources(): Resource[] {
+  const numResources = min(PAGE_SIZE, resources.length);
+  const startIndex = resources.length - numResources;
+  const result = new Array<Resource>(numResources);
+  for(let i = 0; i < numResources; i++) {
+    result[i] = resources[i + startIndex];
+  }
+  return result;
 }
+
+
+ function is_valid_url(url: string): bool {
+  return url.startsWith("https://")
+}
+
+
+
+
+// ----------------------------------
+
+//NOTE: resources is stored in PersistentMap
+// export function addResource(accountId: AccountId, title: string, url: string, category: Category): void {
+//   // url has to have identifier from valid content provider
+//   assert(is_valid_url(url), "URL is not valid, must start with valid https://")
+
+//   // save the resource to storage
+//   const resource = new Resource(title, url, category)
+
+//   resources.set(accountId, resource)
+//   //resources.push(resource)
+//   creators.add(accountId)
+// }
+
+
+// export function removeResource() : void {
+//   assert(resources.contains(Context.sender), "You didn't add any resources.");
+
+//   resources.delete(Context.sender);
+//   creators.delete(Context.sender);
+
+//   logging.log(`\n\n\t> Resource removed. \n\n\t`)
+// } 
+
+
+// export function viewMyResources(accountId: string) : Resource | null{
+//   if (resources.contains(accountId)) {
+//       let resource = resources.getSome(accountId);
+//       logging.log(`\n\n\t> Your Resources \n\n\t` + resource.title)
+//       return resource;
+//   }
+//   return null
+// }
+
+// export function viewAllResources() : void {
+//   const creatorsValues = creators.values();
+
+//   let resource : Resource;
+  
+//   for (let i = 0; i < creators.size; i++) {
+//     resource = resources.getSome(creatorsValues[i]);
+//       logging.log(`\n\n\t> Owner : ${resource.creator} \n\n\t` + resource)
+//   }
+// }
+
+// NOTE: END
+
+// ----------------------------------
