@@ -5,6 +5,13 @@ import { AccountId, PAGE_SIZE } from "../../utils"
 // ____________________________________________________
 // ___________________ add resource ___________________
 // ____________________________________________________
+/**
+ * 
+ * @param accountId 
+ * @param title 
+ * @param url 
+ * @param category 
+ */
 export function addResource(accountId: AccountId, title: string, url: string, category: string): void {
   // url has to have identifier from valid content provider
   assert(isValidURL(url), "URL is not valid, must start with valid https://")
@@ -16,9 +23,13 @@ export function addResource(accountId: AccountId, title: string, url: string, ca
   creators.add(accountId)
 }
 
-// ____________________________________________________
+// ___________________________________________________
 // __________________ get resources __________________
-// ____________________________________________________
+// ___________________________________________________
+/**
+ * 
+ * @returns resources
+ */
 export function getResources(): Resource[] {
   const numResources = min(PAGE_SIZE, resources.length);
   const startIndex = resources.length - numResources;
@@ -32,6 +43,12 @@ export function getResources(): Resource[] {
 // ____________________________________________________
 // ______________ add vote to a resource ______________
 // ____________________________________________________
+/**
+ * 
+ * @param voter 
+ * @param value 
+ * @param resourceId 
+ */
 export function addVote(voter: string, value: i8, resourceId: i32 ): void {
   // TODO: Voter shouldn't be able to upvote more than once
   //assert(!voters.has(voter) && , "Voter has already voted")
@@ -55,6 +72,11 @@ export function addVote(voter: string, value: i8, resourceId: i32 ): void {
 // __________________________________________________________
 // ______________ get vote count of a resource ______________
 // __________________________________________________________
+/**
+ * 
+ * @param resourceId 
+ * @returns vote_score of resource
+ */
 export function getVotesCount(resourceId: i32): u32 {
   const resource = resources[resourceId];
 
@@ -64,6 +86,10 @@ export function getVotesCount(resourceId: i32): u32 {
 // ________________________________________________________
 // ______________ add donation to a resource ______________
 // ________________________________________________________
+/**
+ * 
+ * @param resourceId 
+ */
 export function addDonation(resourceId: i32): void {
   assert(resourceId >= 0, 'resourceId must be bigger than 0');
 	assert(resourceId < resources.length, 'resourceId must be valid');
@@ -82,6 +108,11 @@ export function addDonation(resourceId: i32): void {
 // ______________________________________________________________
 // ______________ get donation count of a resource ______________
 // ______________________________________________________________
+/**
+ * 
+ * @param resourceId 
+ * @returns total_donations
+ */
 export function getDonationsCount(resourceId: i32): u128 {
   const resource = resources[resourceId];
   return resource.total_donations
@@ -90,6 +121,11 @@ export function getDonationsCount(resourceId: i32): u128 {
 // __________________________________________
 // ______________ validate url ______________
 // __________________________________________
+/**
+ * 
+ * @param url 
+ * @returns 
+ */
 function isValidURL(url: string): bool {
   return url.startsWith("https://")
 }
