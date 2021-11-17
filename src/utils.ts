@@ -90,12 +90,5 @@ export function assert_single_promise_success(): void {
   assert(x.length == 1, "Expected exactly one promise result")
   assert(x[0].succeeded, "Expected PromiseStatus to be successful")
 }
-export const RESOURCE_KEY = "state"
+//export const RESOURCE_KEY = "state"
 export const PAGE_SIZE = 10
-// TODO: MOVE TO UTILS
-export enum Category {
-  "NEAR Docs",
-  "Smart Contracts",
-  "NEAR",
-  "Learn NEAR"
-}

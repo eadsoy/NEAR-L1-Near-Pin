@@ -1,10 +1,9 @@
-import { storage, Context, logging } from "near-sdk-core"
-import { Resource, Vote, resources, creators, votes, voters} from "./models"
-import { AccountId, PAGE_SIZE, Category } from "../../utils"
+import { storage, Context, logging, u128, PersistentVector} from "near-sdk-core"
+import { Resource, Vote, Donation, resources, creators, votes, voters, donations} from "./models"
+import { AccountId, PAGE_SIZE } from "../../utils"
 
 
-// NOTE: resources is stored in PersistentVector
-export function addResource(accountId: AccountId, title: string, url: string, category: Category): void {
+export function addResource(accountId: AccountId, title: string, url: string, category: string): void {
   // url has to have identifier from valid content provider
   assert(is_valid_url(url), "URL is not valid, must start with valid https://")
 
@@ -25,30 +24,54 @@ export function getResources(): Resource[] {
   return result;
 }
 
- function is_valid_url(url: string): bool {
+function is_valid_url(url: string): bool {
   return url.startsWith("https://")
 }
 
-export function addVote(voter: string, value: i8): void {
-  // allow each account to vote only once
-  assert(!voters.has(voter), "Voter has already voted")
-  // fetch resource from storage
-  const resource = Resource.get()
+export function addVote(voter: string, value: i8, resourceId: i32 ): void {
+  // TODO: Voter shouldn't be able to upvote more than once
+  //assert(!voters.has(voter) && , "Voter has already voted")
+ 
+  assert(resourceId >= 0, 'resourceID must be bigger than 0');
+	assert(resourceId < resources.length, 'resourceID must be valid');
+
+  const resourceToVote = resources[resourceId];
+  logging.log("resourceToVote is: ")
+  logging.log(resourceToVote)
   // calculate the new score for the meme
-  resource.vote_score = resource.vote_score + value
+  resourceToVote.vote_score = resourceToVote.vote_score + value
+  
   // save it back to storage
-  Resource.set(resource)
+  resources.replace(resourceId, resourceToVote);
   // remember the voter has voted
   voters.add(voter)
   // add the new Vote
-  votes.push(new Vote(value, voter))
+  votes.push(new Vote(value, voter, resourceId))
 }
 
 export function getVotesCount(): u32 {
   return votes.length
 }
 
-// ----------------------------------
+// TODO:
+export function addDonation(resourceId: i32): void {
+  // fetch meme from storage
+  const resourceToDonate = resources[resourceId];
+
+  // record the donation
+  resourceToDonate.total_donations = u128.add(resourceToDonate.total_donations, Context.attachedDeposit);
+
+  // save it back to storage
+  resources.replace(resourceId, resourceToDonate);
+  // add the new Donation
+  donations.push(new Donation())
+}
+
+export function get_donations_count(): u32 {
+  return donations.length
+}
+
+
 
 //NOTE: resources is stored in PersistentMap
 // export function addResource(accountId: AccountId, title: string, url: string, category: Category): void {
