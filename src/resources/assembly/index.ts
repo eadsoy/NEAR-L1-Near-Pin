@@ -1,9 +1,6 @@
 import { storage, Context, logging } from "near-sdk-core"
-import { Resource, Vote, resources, Category, creators} from "./models"
+import { Resource, Vote, resources, Category, creators, votes, voters} from "./models"
 import { AccountId, PAGE_SIZE } from "../../utils"
-
-
-
 
 
 // NOTE: resources is stored in PersistentVector
@@ -28,13 +25,28 @@ export function getResources(): Resource[] {
   return result;
 }
 
-
  function is_valid_url(url: string): bool {
   return url.startsWith("https://")
 }
 
+export function addVote(voter: string, value: i8): void {
+  // allow each account to vote only once
+  assert(!voters.has(voter), "Voter has already voted")
+  // fetch resource from storage
+  const resource = Resource.get()
+  // calculate the new score for the meme
+  resource.vote_score = resource.vote_score + value
+  // save it back to storage
+  Resource.set(resource)
+  // remember the voter has voted
+  voters.add(voter)
+  // add the new Vote
+  votes.push(new Vote(value, voter))
+}
 
-
+export function getVotesCount(): u32 {
+  return votes.length
+}
 
 // ----------------------------------
 
