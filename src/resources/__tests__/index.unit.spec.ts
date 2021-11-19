@@ -52,7 +52,7 @@ describe("Resource Tests", () => {
   });
 
   // Should retrieve all resources
-  it('retrieves all resources', () => {
+  it('retrieves resources', () => {
     addResource(title, url, category);
     const resourcesArr = getResources();
     expect(resourcesArr.length).toBe(
@@ -65,6 +65,35 @@ describe("Resource Tests", () => {
     );
   });
 
+  it('only show the last 10 resources', ()  => {
+    addResource(title, url, category);
+
+    const newResources: Resource[] = [];
+
+    for(let i: i32 = 0; i < 10; i++) {
+      const url = 'https://www.someurl' + i.toString() + '.com';
+      const title = 'res-' + i.toString();
+      const category = 'test category'
+
+      newResources.push(new Resource(title, url, category));
+
+      addResource(title, url, category);
+    }
+
+    const resources = getResources();
+
+    log(resources.slice(7, 10));
+    
+    expect(resources).toStrictEqual(
+      newResources,
+      'should be the last ten resources'
+    );
+    expect(resources).not.toIncludeEqual(
+      resource,
+      'shouldn\'t contain the first element'
+    );
+  });
+  
   // Should allow voting for a resource only once
   itThrows('voter can only vote a for a resource once', () => {
     addResource(title, url, category);

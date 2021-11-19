@@ -9,7 +9,7 @@ export function addResource(title: string, url: string, category: string): void 
   // url has to be valid
   assert(isValidURL(url), "URL is not valid, must start with valid https://")
   assert(!urls.has(url), "URL already exists")
-  
+
   // create new Resource
   const resource = new Resource(title, url, category)
 
@@ -29,9 +29,11 @@ export function getResources(): Resource[] {
   const numResources = min(PAGE_SIZE, resources.length);
   const startIndex = resources.length - numResources;
   const result = new Array<Resource>(numResources);
+
   for(let i = 0; i < numResources; i++) {
     result[i] = resources[i + startIndex];
   }
+
   return result;
 }
 
@@ -83,6 +85,7 @@ export function addDonation(resourceId: i32): void {
 
   // save it back to storage
   resources.replace(resourceId, resource);
+
   // create new Donation and add to donations
   donations.push(new Donation())
 }
@@ -97,6 +100,7 @@ export function addDonation(resourceId: i32): void {
  */
 export function getDonationsCount(resourceId: i32): u128 {
   const resource = resources[resourceId];
+  
   return resource.total_donations
 }
 
