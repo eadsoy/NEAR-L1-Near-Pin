@@ -1,4 +1,3 @@
-import { AccountId, PAGE_SIZE } from "../../utils"
 import { Resource, Donation, resources, donations } from "../assembly/models";
 import { addResource, getResources, addVote, addDonation } from "../assembly/index"
 import { Context, u128 } from 'near-sdk-core';
@@ -169,4 +168,15 @@ describe('Donation Tests', () => {
       'receiving account balance should be 10000000000000000000000'
     );
   });
+
+  itThrows('resourceId must be valid',  () => {
+    addResource(title, url, category);
+
+    VMContext.setSigner_account_id(secondMockAccount)
+    VMContext.setPredecessor_account_id(secondMockAccount)
+    VMContext.setAttached_deposit(u128.fromString('10000000000000000000000'));
+
+    addDonation(1);
+    donation = new Donation()
+  })
 });
