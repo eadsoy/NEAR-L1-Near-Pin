@@ -1,18 +1,11 @@
 import { Context, logging, u128} from "near-sdk-core"
-import { Resource, Vote, Donation, resources, creators, votes, voters, donations} from "./models"
+import { Resource, Donation, resources, donations} from "./models"
 import { AccountId, PAGE_SIZE } from "../../utils"
 
 // ____________________________________________________
 // ___________________ add resource ___________________
 // ____________________________________________________
-/**
- * 
- * @param accountId 
- * @param title 
- * @param url 
- * @param category 
- */
-export function addResource(accountId: AccountId, title: string, url: string, category: string): void {
+export function addResource(title: string, url: string, category: string): void {
   // url has to have identifier from valid content provider
   assert(isValidURL(url), "URL is not valid, must start with valid https://")
 
@@ -20,7 +13,7 @@ export function addResource(accountId: AccountId, title: string, url: string, ca
   const resource = new Resource(title, url, category)
 
   resources.push(resource)
-  creators.add(accountId)
+
 }
 
 // ___________________________________________________
@@ -43,44 +36,21 @@ export function getResources(): Resource[] {
 // ____________________________________________________
 // ______________ add vote to a resource ______________
 // ____________________________________________________
-/**
- * 
- * @param voter 
- * @param value 
- * @param resourceId 
- */
-export function addVote(voter: string, value: i8, resourceId: i32 ): void {
-  // TODO: Voter shouldn't be able to upvote more than once
-  //assert(!voters.has(voter) && , "Voter has already voted")
- 
-  assert(resourceId >= 0, 'resourceId must be bigger than 0');
-	assert(resourceId < resources.length, 'resourceId must be valid');
+export function addVote(resourceId: i32 ): void {
+  assert(resourceId >= 0, "resourceId must be bigger than 0");
+	assert(resourceId < resources.length, "resourceId must be valid");
 
   const resource = resources[resourceId];
-  logging.log("resource is: ")
+  const voter = Context.predecessor
+
+  assert(!resource.creator.includes(voter), "Cannot vote own resource!")
+  assert(!resource.votes.has(voter), "Voter has already voted!")
+
   logging.log(resource)
-  // calculate the new score for the resource
-  resource.vote_score = resource.vote_score + value
-  // save it back to storage
+
+  resource.vote_score = resource.vote_score + 1
+  resource.votes.add(voter);
   resources.replace(resourceId, resource);
-  // remember the voter has voted
-  voters.add(voter)
-  // add the new Vote
-  votes.push(new Vote(value, voter, resourceId))
-}
-
-// __________________________________________________________
-// ______________ get vote count of a resource ______________
-// __________________________________________________________
-/**
- * 
- * @param resourceId 
- * @returns vote_score of resource
- */
-export function getVotesCount(resourceId: i32): u32 {
-  const resource = resources[resourceId];
-
-  return resource.vote_score
 }
 
 // ________________________________________________________
@@ -91,8 +61,8 @@ export function getVotesCount(resourceId: i32): u32 {
  * @param resourceId 
  */
 export function addDonation(resourceId: i32): void {
-  assert(resourceId >= 0, 'resourceId must be bigger than 0');
-	assert(resourceId < resources.length, 'resourceId must be valid');
+  assert(resourceId >= 0, "resourceId must be bigger than 0");
+	assert(resourceId < resources.length, "resourceId must be valid");
 
   const resource = resources[resourceId];
 
