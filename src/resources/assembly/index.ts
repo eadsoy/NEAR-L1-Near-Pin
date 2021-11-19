@@ -1,19 +1,21 @@
 import { Context, logging, u128} from "near-sdk-core"
-import { Resource, Donation, resources, donations} from "./models"
-import { AccountId, PAGE_SIZE } from "../../utils"
+import { Resource, Donation, resources, donations, urls} from "./models"
+import { PAGE_SIZE } from "../../utils"
 
 // ____________________________________________________
 // ___________________ add resource ___________________
 // ____________________________________________________
 export function addResource(title: string, url: string, category: string): void {
-  // url has to have identifier from valid content provider
+  // url has to be valid
   assert(isValidURL(url), "URL is not valid, must start with valid https://")
+  assert(!urls.has(url), "URL already exists")
 
-  // save the resource to storage
+  // create new Resource
   const resource = new Resource(title, url, category)
 
+  // save the resource to storage
   resources.push(resource)
-
+  urls.add(url)
 }
 
 // ___________________________________________________
@@ -27,9 +29,11 @@ export function getResources(): Resource[] {
   const numResources = min(PAGE_SIZE, resources.length);
   const startIndex = resources.length - numResources;
   const result = new Array<Resource>(numResources);
+
   for(let i = 0; i < numResources; i++) {
     result[i] = resources[i + startIndex];
   }
+
   return result;
 }
 
@@ -37,19 +41,29 @@ export function getResources(): Resource[] {
 // ______________ add vote to a resource ______________
 // ____________________________________________________
 export function addVote(resourceId: i32 ): void {
+  // assert resourceId
   assert(resourceId >= 0, "resourceId must be bigger than 0");
 	assert(resourceId < resources.length, "resourceId must be valid");
 
+  // get resource with resourceId
   const resource = resources[resourceId];
+  // get voter 
   const voter = Context.predecessor
 
+  // voter cannot vote for their own resources 
   assert(!resource.creator.includes(voter), "Cannot vote own resource!")
+  // voter cannot vote twice for same resource
   assert(!resource.votes.has(voter), "Voter has already voted!")
 
   logging.log(resource)
 
+  // increment vote_score by 1
   resource.vote_score = resource.vote_score + 1
+
+  // add voter to votes
   resource.votes.add(voter);
+
+  // update resource in resources
   resources.replace(resourceId, resource);
 }
 
@@ -71,7 +85,8 @@ export function addDonation(resourceId: i32): void {
 
   // save it back to storage
   resources.replace(resourceId, resource);
-  // add the new Donation
+
+  // create new Donation and add to donations
   donations.push(new Donation())
 }
 
@@ -85,6 +100,7 @@ export function addDonation(resourceId: i32): void {
  */
 export function getDonationsCount(resourceId: i32): u128 {
   const resource = resources[resourceId];
+  
   return resource.total_donations
 }
 
@@ -94,7 +110,7 @@ export function getDonationsCount(resourceId: i32): u128 {
 /**
  * 
  * @param url 
- * @returns 
+ * @returns bool
  */
 function isValidURL(url: string): bool {
   return url.startsWith("https://")

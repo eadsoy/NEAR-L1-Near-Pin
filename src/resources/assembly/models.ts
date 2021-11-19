@@ -16,17 +16,6 @@ export class Resource {
   ) {}
 }
 
-// @nearBindgen
-// export class Vote {
-//   created_at: Timestamp = Context.blockTimestamp;
-
-//   constructor(
-//     public value: i8,
-//     public voter: AccountId,
-//     public resourceId: i32
-//   ) { }
-// }
-
 @nearBindgen
 export class Donation {
   amount: Money = Context.attachedDeposit;
@@ -37,3 +26,4 @@ export class Donation {
 
 export const resources = new PersistentVector<Resource>("r")
 export const donations = new PersistentVector<Donation>("d");
+export const urls = new PersistentSet<String>("u");
