@@ -6,10 +6,14 @@ import { PAGE_SIZE } from "../../utils"
 // ___________________ add resource ___________________
 // ____________________________________________________
 export function addResource(title: string, url: string, category: string): void {
+  // url, title. category can't be empty
+  assert(isEmptyString(title), "title can't be empty")
+  assert(isEmptyString(category), "category can't be empty")
+  assert(isEmptyString(url), "URL can't be empty")
   // url has to be valid
   assert(isValidURL(url), "URL is not valid, must start with valid https://")
   assert(!urls.has(url), "URL already exists")
-
+  
   const existingCategories = getCategories()
 
   if (existingCategories.indexOf(category)) {
@@ -146,4 +150,8 @@ export function getDonationsCount(resourceId: i32): u128 {
  */
 function isValidURL(url: string): bool {
   return url.startsWith("https://")
+}
+
+function isEmptyString(strValue: string): bool{
+  return (strValue === "")
 }
