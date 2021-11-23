@@ -46,3 +46,7 @@ near call $CONTRACT addVote '{"resourceId": 0}' --accountId your-account-id.test
 ```sh
 near call $CONTRACT addVote '{"resourceId": 0}' --accountId <your-account-id.testnet> --amount 2
 ```
+## Run Tests
+```
+yarn test
+```
