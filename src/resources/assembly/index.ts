@@ -77,7 +77,7 @@ export function getCategories(): string[] {
 export function addVote(resourceId: i32 ): void {
   // assert resourceId
   assert(resourceId >= 0, "resourceId must be bigger than 0");
-	assert(resourceId < resources.length, "resourceId must be valid");
+  assert(resourceId < resources.length, "resourceId must be valid");
 
   // get resource with resourceId
   const resource = resources[resourceId];
