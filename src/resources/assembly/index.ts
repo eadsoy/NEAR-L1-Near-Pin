@@ -109,7 +109,7 @@ export function addVote(resourceId: i32 ): void {
  */
 export function addDonation(resourceId: i32): void {
   assert(resourceId >= 0, "resourceId must be bigger than 0");
-	assert(resourceId < resources.length, "resourceId must be valid");
+  assert(resourceId < resources.length, "resourceId must be valid");
 
   const resource = resources[resourceId];
 
