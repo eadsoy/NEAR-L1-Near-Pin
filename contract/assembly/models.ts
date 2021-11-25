@@ -1,4 +1,4 @@
-import { AccountId, Money, Timestamp } from "../../utils";
+import { AccountId, Money, Timestamp } from "../utils";
 import { Context, u128, PersistentSet, PersistentVector } from "near-sdk-core"
 
 @nearBindgen
