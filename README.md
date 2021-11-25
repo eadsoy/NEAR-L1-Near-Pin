@@ -12,7 +12,7 @@ yarn
 ## Build and Deploy the contract
 ```
 yarn build:release
-near dev-deploy ./build/release/resources.wasm
+near dev-deploy ./build/release/contract.wasm
 ```
 
 ## Add a Resource
@@ -44,7 +44,7 @@ near call $CONTRACT addVote '{"resourceId": 0}' --accountId your-account-id.test
 `addDonation(): void`
 
 ```sh
-near call $CONTRACT addDonation '{"resourceId": 0}' --accountId <your-account-id.testnet> --amount 2
+near call $CONTRACT addDonation '{"resourceId": 0}' --accountId your-account-id.testnet --amount 2
 ```
 ## Run Tests
 ```
