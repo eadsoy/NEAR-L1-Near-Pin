@@ -106,6 +106,7 @@ describe("Resource Tests", () => {
     // create another resource with same account
     title = "Resource-2"
     let anotherUrl = "https://www.anotherurl.com"
+    // use existing category and a new one
     let otherCategories = [`${category}`, "Category-1"]
     addResource(title, anotherUrl, otherCategories);
 
@@ -119,6 +120,10 @@ describe("Resource Tests", () => {
     expect(categories[0].category_title).toStrictEqual(
       otherCategories[0],
       'category should have title: "Category-0"'
+    );
+    expect(categories[1].category_title).toStrictEqual(
+      otherCategories[1],
+      'category should have title: "Category-1"'
     );
   });
 
@@ -196,68 +201,68 @@ describe("Resource Tests", () => {
   });
 })
 
-// describe('Donation Tests', () => {
-//   beforeEach(() => {
-//     VMContext.setSigner_account_id(firstMockAccount)
-//     VMContext.setPredecessor_account_id(firstMockAccount)
+describe('Donation Tests', () => {
+  beforeEach(() => {
+    VMContext.setSigner_account_id(firstMockAccount)
+    VMContext.setPredecessor_account_id(firstMockAccount)
 
-//     VMContext.setAttached_deposit(u128.fromString('0'));
-//     VMContext.setAccount_balance(u128.fromString('0'));
-//     resource = new Resource(title, url, category)
-//   });
+    VMContext.setAttached_deposit(u128.fromString('0'));
+    VMContext.setAccount_balance(u128.fromString('0'));
+    resource = new Resource(title, url, category)
+  });
 
-//   it('attaches a deposit to a contract call', () => {
-//     log('Initial account balance of ' + Context.predecessor + ': ' + Context.accountBalance.toString());
+  it('attaches a deposit to a contract call', () => {
+    log('Initial account balance of ' + Context.predecessor + ': ' + Context.accountBalance.toString());
 
-//     addResource(title, url, category);
+    addResource(title, url, category);
 
-//     log('Initial resource total donations: ' + resources[0].total_donations.toString())
+    log('Initial resource total donations: ' + resources[0].total_donations.toString())
 
-//     VMContext.setSigner_account_id(secondMockAccount)
-//     VMContext.setPredecessor_account_id(secondMockAccount)
-//     VMContext.setAttached_deposit(u128.fromString('10000000000000000000000'));
+    VMContext.setSigner_account_id(secondMockAccount)
+    VMContext.setPredecessor_account_id(secondMockAccount)
+    VMContext.setAttached_deposit(u128.fromString('10000000000000000000000'));
 
-//     addDonation(0);
-//     donation = new Donation()
+    addDonation(0);
+    donation = new Donation()
 
-//     log('Donation made by ' + Context.predecessor + ':\n' + donation.toJSON())
-//     log('Resource total donations after donation: ' + resources[0].total_donations.toString())
+    log('Donation made by ' + Context.predecessor + ':\n' + donation.toJSON())
+    log('Resource total donations after donation: ' + resources[0].total_donations.toString())
     
 
-//     VMContext.setSigner_account_id(firstMockAccount)
-//     VMContext.setPredecessor_account_id(firstMockAccount)
+    VMContext.setSigner_account_id(firstMockAccount)
+    VMContext.setPredecessor_account_id(firstMockAccount)
 
-//     log('Received: 10000000000000000000000');
-//     log('Account balance of account ' +  Context.predecessor + ' after deposit: ' + Context.accountBalance.toString());
+    log('Received: 10000000000000000000000');
+    log('Account balance of account ' +  Context.predecessor + ' after deposit: ' + Context.accountBalance.toString());
 
-//     expect(donations.length).toBe(
-//       1,
-//       'should only contain one donation'
-//     );
-//     expect(donations[0]).toStrictEqual(
-//       donation,
-//       'donation should exist'
-//     );
+    expect(donations.length).toBe(
+      1,
+      'should only contain one donation'
+    );
+    expect(donations[0]).toStrictEqual(
+      donation,
+      'donation should exist'
+    );
 
-//     expect(resources[0].total_donations).toStrictEqual(
-//       donation.amount,
-//       'resource total donations should increase by donation amount'
-//     );
+    expect(resources[0].total_donations).toStrictEqual(
+      donation.amount,
+      'resource total donations should increase by donation amount'
+    );
 
-//     expect(Context.accountBalance.toString()).toStrictEqual(
-//       '10000000000000000000000',
-//       'receiving account balance should be 10000000000000000000000'
-//     );
-//   });
+    expect(Context.accountBalance.toString()).toStrictEqual(
+      '10000000000000000000000',
+      'receiving account balance should be 10000000000000000000000'
+    );
+  });
 
-//   itThrows('resourceId must be valid',  () => {
-//     addResource(title, url, category);
+  itThrows('resourceId must be valid',  () => {
+    addResource(title, url, category);
 
-//     VMContext.setSigner_account_id(secondMockAccount)
-//     VMContext.setPredecessor_account_id(secondMockAccount)
-//     VMContext.setAttached_deposit(u128.fromString('10000000000000000000000'));
+    VMContext.setSigner_account_id(secondMockAccount)
+    VMContext.setPredecessor_account_id(secondMockAccount)
+    VMContext.setAttached_deposit(u128.fromString('10000000000000000000000'));
 
-//     addDonation(1);
-//     donation = new Donation()
-//   })
-// });
+    addDonation(1);
+    donation = new Donation()
+  })
+});
