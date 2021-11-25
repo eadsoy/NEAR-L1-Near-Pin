@@ -39,11 +39,6 @@ export function addResource(title: string, url: string, category: string[]): voi
     categories.push(newCategory)
    }
   }
-  // if (existingCategories.indexOf(category)) {
-  //   const newCategory = new Category()
-  //   newCategory.category_title = category
-  //   categories.push(newCategory)
-  // }
 
   // create new Resource
   const resource = new Resource(title, url, category)
