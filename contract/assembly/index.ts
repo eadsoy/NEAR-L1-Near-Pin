@@ -1,6 +1,6 @@
 import { Context, logging, u128} from "near-sdk-core"
 import { Resource, Donation, Category, resources, donations, urls, categories} from "./models"
-import { PAGE_SIZE } from "../../utils"
+import { PAGE_SIZE } from "../utils"
 
 // ____________________________________________________
 // ___________________ add resource ___________________
