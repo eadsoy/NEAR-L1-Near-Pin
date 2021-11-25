@@ -28,7 +28,6 @@ export class Donation {
   created_at: Timestamp = Context.blockTimestamp;
 }
 
-
 export const resources = new PersistentVector<Resource>("r")
 export const donations = new PersistentVector<Donation>("d");
 export const urls = new PersistentSet<String>("u");
