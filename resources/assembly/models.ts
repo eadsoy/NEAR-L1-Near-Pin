@@ -12,8 +12,10 @@ export class Resource {
   constructor(
     public title: string,
     public url: string,
-    public category: string
-  ) {}
+    public category: Array<string>
+  ) {
+    
+  }
 }
 
 @nearBindgen
