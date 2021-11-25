@@ -11,22 +11,39 @@ import { PAGE_SIZE } from "../utils"
  * @param url 
  * @param category 
  */
-export function addResource(title: string, url: string, category: string): void {
-  // url, title. category can't be empty
-  assert(isEmptyString(title), "title can't be empty")
-  assert(isEmptyString(category), "category can't be empty")
+export function addResource(title: string, url: string, category: string[]): void {
+  // url, title, category can't be empty
   assert(isEmptyString(url), "URL can't be empty")
-  // url has to be valid
+  assert(isEmptyString(title), "title can't be empty")
+  assert(category.length != 0, "at least one category required")
+  // category array can't be longer than 3
+  assert(category.length <= 3, "category array can't be longer than 3")
+  // url must be valid
   assert(isValidURL(url), "URL is not valid, must start with valid https://")
   assert(!urls.has(url), "URL already exists")
   
+  // fetch existing categories
   const existingCategories = getCategories()
+  // get cataegory array input length
+  const inputCategoriesLength = category.length
 
-  if (existingCategories.indexOf(category)) {
+  // iterate over category array
+  // and check whether each item in category array
+  // exists in existingCategories array. 
+  for(let i = 0; i < inputCategoriesLength; i++) {
+    // if category item doesn't exist, create new one
+    // and add to categories
+    if (!existingCategories.includes(category[i])) {
     const newCategory = new Category()
-    newCategory.category_title = category
+    newCategory.category_title = category[i]
     categories.push(newCategory)
+   }
   }
+  // if (existingCategories.indexOf(category)) {
+  //   const newCategory = new Category()
+  //   newCategory.category_title = category
+  //   categories.push(newCategory)
+  // }
 
   // create new Resource
   const resource = new Resource(title, url, category)
