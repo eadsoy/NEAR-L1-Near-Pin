@@ -12,7 +12,7 @@ yarn
 ## Build and Deploy the contract
 ```
 yarn build:release
-near dev-deploy ./build/release/contract.wasm
+near dev-deploy ./build/release/resources.wasm
 ```
 
 ## Add a Resource
