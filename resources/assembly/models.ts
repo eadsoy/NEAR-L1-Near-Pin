@@ -3,6 +3,7 @@ import { Context, u128, PersistentSet, PersistentVector } from "near-sdk-core"
 
 @nearBindgen
 export class Resource {
+  resourceId: i32;
   creator: AccountId = Context.sender;
   created_at: Timestamp = Context.blockTimestamp;
   vote_score: i32 = 0;

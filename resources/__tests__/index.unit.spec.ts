@@ -1,5 +1,5 @@
 import { Resource, Donation, resources, donations, categories } from "../assembly/models";
-import { addResource, getResources, addVote, addDonation, getCategories } from "../assembly/index"
+import { addResource, getResources, addVote, addDonation, getCategories, getResourcesByRange } from "../assembly/index"
 import { Context, u128 } from 'near-sdk-core';
 import { VMContext } from "near-mock-vm";
 
@@ -73,7 +73,7 @@ describe("Resource Tests", () => {
 
     const newResources: Resource[] = [];
 
-    for(let i: i32 = 0; i < 10; i++) {
+    for(let i: i32 = 0; i < 3; i++) {
       const url = 'https://www.someurl' + i.toString() + '.com';
       const title = 'res-' + i.toString();
       const category = ['test category']
@@ -82,11 +82,11 @@ describe("Resource Tests", () => {
 
       addResource(title, url, category);
     }
+  
+    const resources = getResourcesByRange(1, 4);
 
-    const resources = getResources();
+    log(resources);
 
-    log(resources.slice(7, 10));
-    
     expect(resources).toStrictEqual(
       newResources,
       'should be the last three resources'
