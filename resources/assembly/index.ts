@@ -278,12 +278,12 @@ export function getLinkedResources(categoryTitle: string): Resource[] {
 // ______________________________________________
 // _________________  bookmarks _________________
 // ______________________________________________
-
 export function addBookmark(resourceId: i32): void {
   assert(resourceId >= 0, "resourceId must be bigger than 0");
   assert(resourceId < resources.length, "resourceId must be valid");
   const resource = resources[resourceId]
-  // voter cannot vote twice for same resource
+  
+  // resource can be bookmarked only once
   assert(!resource.bookmarks.has(Context.sender), "Already bookmarked!")
 
   resource.bookmarks.add(Context.sender)
@@ -307,6 +307,24 @@ export function removeBookmark(resourceId: i32): void {
   logging.log('bookmark removed')
   logging.log(resource)
 }
+
+// TODO: FIX THIS
+// export function getBookmarks(accountId: string): Resource[] {
+//   const resources = getResources()
+//   const numResources = resources.length
+//   const result = new Array<Resource>();
+
+//   for(let i = 0; i < numResources; i++) {
+//     if (resources[i].bookmarks.size > 0) {
+//       if(resources[i].bookmarks.has(accountId)){
+//         result[i] = resources[i]
+//       }
+//     }
+    
+//   }
+  
+//   return result
+// }
 
 // __________________________________________
 // ______________ validate url ______________
@@ -345,7 +363,7 @@ export function deleteCategoriesMap(): void {
   }
 }
 
-export function deleteResources(): void {
+export function clearStorage(): void {
   while (resources.length !== 0) {
     resources.pop()
   }
@@ -358,5 +376,3 @@ export function deleteResources(): void {
   // , categoriesMap
   urls.clear()
 }
-
-
